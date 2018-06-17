@@ -11,15 +11,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" />
-        <activity android:name=".example_1_dagger.Example1Dagger" />
-        <activity android:name=".example_2_no_dagger.screen.Example2DaggerActivity">
+        <activity android:name=".example_2_dagger.Example2DaggerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".example_1_dagger.Example1Dagger" />
+        <activity android:name=".example_2_no_dagger.screen.Example2NoDaggerActivity" />
     </application>
 
 </manifest>

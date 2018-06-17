@@ -24,9 +24,11 @@ public class RandomUserAdapter extends RecyclerView.Adapter<RandomUserAdapter.Vi
     private List<Result> mResults;
     private LayoutInflater mLayoutInflater;
     private Context mContext;
+    private Picasso mPicasso;
 
-    public RandomUserAdapter(Context context) {
+    public RandomUserAdapter(Context context, Picasso picasso) {
         mContext = context;
+        mPicasso = picasso;
     }
 
     @NonNull
@@ -37,7 +39,7 @@ public class RandomUserAdapter extends RecyclerView.Adapter<RandomUserAdapter.Vi
         }
 
         View itemView = mLayoutInflater.inflate(R.layout.item_random_user, parent, false);
-        return new ViewHolder(itemView);
+        return new ViewHolder(itemView, mPicasso);
     }
 
     @Override
@@ -67,12 +69,14 @@ public class RandomUserAdapter extends RecyclerView.Adapter<RandomUserAdapter.Vi
 
         private TextView mTextName;
         private ImageView mImageView;
+        private Picasso mPicasso;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView, Picasso picasso) {
             super(itemView);
 
             mTextName = itemView.findViewById(R.id.text_name);
             mImageView = itemView.findViewById(R.id.image);
+            mPicasso = picasso;
         }
 
         private void bindData(Result result) {
@@ -83,8 +87,7 @@ public class RandomUserAdapter extends RecyclerView.Adapter<RandomUserAdapter.Vi
             mTextName.setText(String.format("%s %s",
                     result.getName().getFirst(), result.getName().getLast()));
 
-            Picasso.with(mImageView.getContext())
-                    .load(result.getPicture().getLarge())
+            mPicasso.load(result.getPicture().getLarge())
                     .into(mImageView);
         }
     }
