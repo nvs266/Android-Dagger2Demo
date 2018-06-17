@@ -4,7 +4,6 @@ import com.framgia.mvp_dagger.example_2_no_dagger.data.model.RandomUsers;
 import com.framgia.mvp_dagger.example_2_no_dagger.data.source.RandomUsersDataSource;
 import com.framgia.mvp_dagger.example_2_no_dagger.data.source.remote.RandomUsersRemoteDataSource;
 
-
 import io.reactivex.Observable;
 
 /**

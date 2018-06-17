@@ -1,4 +1,4 @@
-package com.framgia.mvp_dagger.example_2_no_dagger.screen;
+package com.framgia.mvp_dagger.example_2_dagger;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,47 +10,37 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.framgia.mvp_dagger.R;
+import com.framgia.mvp_dagger.example_2_dagger.component.DaggerRandomUserComponent;
+import com.framgia.mvp_dagger.example_2_dagger.component.RandomUserComponent;
+import com.framgia.mvp_dagger.example_2_dagger.module.ActivityModule;
+import com.framgia.mvp_dagger.example_2_dagger.module.ContextModule;
 import com.framgia.mvp_dagger.example_2_no_dagger.data.model.Result;
-import com.framgia.mvp_dagger.example_2_no_dagger.data.source.api.RandomUsersApi;
-import com.framgia.mvp_dagger.example_2_no_dagger.data.source.remote.RandomUsersRemoteDataSource;
-import com.framgia.mvp_dagger.example_2_no_dagger.data.source.repository.RandomUserRepository;
-import com.google.gson.GsonBuilder;
+import com.framgia.mvp_dagger.example_2_no_dagger.screen.RandomUserAdapter;
+import com.framgia.mvp_dagger.example_2_no_dagger.screen.RandomUsersContract;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import io.reactivex.disposables.CompositeDisposable;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 public class Example2DaggerActivity extends AppCompatActivity implements RandomUsersContract.View {
-
-    private final String BASE_URL = "https://randomuser.me/";
 
     private RandomUserAdapter mRandomUserAdapter;
     private RandomUsersContract.Presenter mPresenter;
     private ProgressBar mProgressBar;
+    private Picasso mPicasso;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_example2_dagger);
+        setContentView(R.layout.activity_example2);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().create()))
+        RandomUserComponent randomUserComponent = DaggerRandomUserComponent.builder()
+                .contextModule(new ContextModule(this))
+                .activityModule(new ActivityModule(this))
                 .build();
 
-        RandomUsersApi randomUsersApi = retrofit.create(RandomUsersApi.class);
+        mPicasso = randomUserComponent.getPicasso();
+        mPresenter = randomUserComponent.getRandomUsersPresenter();
 
-        RandomUsersRemoteDataSource randomUsersRemoteDataSource =
-                new RandomUsersRemoteDataSource(randomUsersApi);
-
-        RandomUserRepository randomUserRepository =
-                new RandomUserRepository(randomUsersRemoteDataSource);
-
-        mPresenter = new RandomUsersPresenter(randomUserRepository, new CompositeDisposable());
         mPresenter.setView(this);
 
         initViews();
@@ -97,7 +87,7 @@ public class Example2DaggerActivity extends AppCompatActivity implements RandomU
         RecyclerView recyclerView = findViewById(R.id.recycler_random_users);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        mRandomUserAdapter = new RandomUserAdapter(this);
+        mRandomUserAdapter = new RandomUserAdapter(this, mPicasso);
         recyclerView.setAdapter(mRandomUserAdapter);
     }
 }
