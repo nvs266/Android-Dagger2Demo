@@ -6,8 +6,6 @@ import com.framgia.mvp_dagger.example_2_dagger.interfaces.ApplicationContext;
 
 import java.io.File;
 
-import javax.inject.Named;
-
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.Cache;
